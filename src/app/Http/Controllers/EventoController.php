@@ -13,21 +13,24 @@ class EventoController extends Controller
      */
     public function index()
     {
+        // Recuperar todos los recursos
         $eventos = Evento::all();
 
+        // Retornar los recursos recuperados
         $respuesta = [
             'eventos' => $eventos,
             'status' => 200,
         ];
 
-        return response()->json($respuesta, 200);
+        return response()->json($respuesta);
     }
 
     /**
-     * Almacenar un recurso recién creado.
+     * Almacenar un recurso recién creado en el almacenamiento.
      */
     public function store(Request $request)
     {
+        // Validar que la petición contenga todos los datos necesarios
         $validator = Validator::make($request->all(), [
             'titulo' => 'required',
             'descripcion' => 'required',
@@ -36,16 +39,17 @@ class EventoController extends Controller
             'ubicacion' => 'required',
         ]);
 
+        // Si la petición no contiene todos los datos necesarios
         if ($validator->fails()) {
             $respuesta = [
                 'message' => 'Datos faltantes',
-                'errors' => $validator->errors(),
                 'status' => 400,
             ];
 
             return response()->json($respuesta, 400);
         }
 
+        // Crear un nuevo recurso con los datos de la petición
         $evento = Evento::create([
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
@@ -54,6 +58,7 @@ class EventoController extends Controller
             'ubicacion' => $request->ubicacion,
         ]);
 
+        // Si el recurso no se pudo crear
         if (!$evento) {
             $respuesta = [
                 'message' => 'Error al crear el evento',
@@ -63,6 +68,7 @@ class EventoController extends Controller
             return response()->json($respuesta, 500);
         }
 
+        // Retornar el recurso creado
         $respuesta = [
             'evento' => $evento,
             'status' => 201,
@@ -92,11 +98,11 @@ class EventoController extends Controller
             'status' => 200,
         ];
 
-        return response()->json($respuesta, 200);
+        return response()->json($respuesta);
     }
 
     /**
-     * Actualizar el recurso especificado.
+     * Actualizar el recurso especificado en el almacenamiento.
      */
     public function update(Request $request, $id)
     {
@@ -122,7 +128,6 @@ class EventoController extends Controller
         if ($validator->fails()) {
             $respuesta = [
                 'message' => 'Datos faltantes',
-                'errors' => $validator->errors(),
                 'status' => 400,
             ];
 
@@ -142,11 +147,11 @@ class EventoController extends Controller
             'status' => 200,
         ];
 
-        return response()->json($respuesta, 200);
+        return response()->json($respuesta);
     }
 
     /**
-     * Eliminar el recurso especificado.
+     * Eliminar el recurso especificado del almacenamiento.
      */
     public function destroy($id)
     {
@@ -168,6 +173,6 @@ class EventoController extends Controller
             'status' => 200,
         ];
 
-        return response()->json($respuesta, 200);
+        return response()->json($respuesta);
     }
 }
